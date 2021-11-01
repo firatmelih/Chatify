@@ -1,4 +1,5 @@
-import React from "react";
+import { useNavigation } from "@react-navigation/core";
+import React, { useState } from "react";
 import { Text, View } from "react-native";
 import {
   List,
@@ -7,10 +8,14 @@ import {
   FAB,
   Portal,
   Dialog,
+  Button,
   Paragraph,
 } from "react-native-paper";
 
-const ChatList = () => {
+const ChatList = (props) => {
+  let x = 0;
+  const [dialog, setDialog] = useState(false);
+  const navigation = useNavigation();
   return (
     <View
       style={{
@@ -18,28 +23,64 @@ const ChatList = () => {
         flex: 1,
       }}
     >
-      <List.Item
-        title="John Doe"
-        description="Hey this is a massage from John!"
-        left={() => <Avatar.Text label="JD" size={50} />}
-      />
+      {props.persons.map((i) => (
+        <List.Item
+          onPress={() => {
+            navigation.navigate("Chat");
+          }}
+          title={`${i.name}`}
+          description={`${
+            i.messageLog.find(
+              (x) =>
+                x.id ==
+                Math.max(
+                  ...i.messageLog.map((m) => {
+                    let x = m.id;
+                    return x;
+                  })
+                )
+            ).message
+          }`}
+          left={() => (
+            <Avatar.Text
+              label={`${i.name.substr(0, 2).toUpperCase()}`}
+              size={50}
+            />
+          )}
+        />
+      ))}
 
       <Divider inset />
 
       <Portal>
-        <Dialog visible={true}>
+        <Dialog
+          onDismiss={() => {
+            setDialog(false);
+          }}
+          visible={dialog}
+        >
           <Dialog.Title>Contacts</Dialog.Title>
           <Dialog.Content>
-            <List.Item
-              title="Xazard Doe"
-              description="Lovely Day!"
-              left={() => <Avatar.Text label="XD" size={50} />}
-            />
+            {props.persons.map((i) => (
+              <List.Item
+                title={`${i.name}`}
+                description={`${i.status}`}
+                left={() => (
+                  <Avatar.Text
+                    label={`${i.name.substr(0, 2).toUpperCase()}`}
+                    size={50}
+                  />
+                )}
+              />
+            ))}
           </Dialog.Content>
         </Dialog>
       </Portal>
 
       <FAB
+        onPress={() => {
+          setDialog(true);
+        }}
         style={{
           backgroundColor: "#00948f",
           position: "absolute",
