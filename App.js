@@ -11,6 +11,43 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { Provider } from "react-native-paper";
 
+const dummyContacts = [
+  {
+    name: "John Doe",
+    id: 1,
+    status: "What a lovely day!",
+    messageLog: [
+      {
+        id: 1,
+        message: "Hey buddy!",
+        date: Date("27.01.2021"),
+      },
+      {
+        id: 2,
+        message: "Are you okay buddy?",
+        date: Date("28.01.2021"),
+      },
+    ],
+  },
+  {
+    name: "Jane Doe",
+    id: 2,
+    status: "What a bad day!",
+    messageLog: [
+      {
+        id: 1,
+        message: "Hi I am Jane!",
+        date: Date("27.01.2021"),
+      },
+      {
+        id: 2,
+        message: "Would you like to talk?",
+        date: Date("28.01.2021"),
+      },
+    ],
+  },
+];
+
 const Stack = createNativeStackNavigator();
 const Tabs = createBottomTabNavigator();
 const TabNavigator = () => (
@@ -39,7 +76,7 @@ const TabNavigator = () => (
         },
       }}
       name="Chat List"
-      component={ChatList}
+      component={() => <ChatList persons={dummyContacts} />}
     />
 
     <Tabs.Screen
@@ -60,6 +97,7 @@ const TabNavigator = () => (
 );
 
 const App = () => {
+  let selected_id = 0;
   return (
     <NavigationContainer>
       <Provider>
@@ -69,7 +107,11 @@ const App = () => {
             component={TabNavigator}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="Chat" component={Chat} />
+          <Stack.Screen
+            options={{ headerTitle: `${dummyContacts[selected_id].name}` }}
+            name="Chat"
+            component={() => <Chat person={dummyContacts[selected_id]} />}
+          />
           <Stack.Screen name="Register" component={Register} />
           <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
