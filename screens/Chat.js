@@ -1,8 +1,14 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
-const Chat = () => {
-  return <Text>This is Chat Screen!</Text>;
+const Chat = (props) => {
+  return (
+    <View>
+      {props.person.messageLog.map((i) => (
+        <Text>{i.message}</Text>
+      ))}
+    </View>
+  );
 };
 
 export default Chat;
